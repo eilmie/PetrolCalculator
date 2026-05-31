@@ -121,12 +121,13 @@
                         android:id="@+id/etPricePerLiter"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:background="@android:drawable/edit_text"
                         android:hint="e.g. 4.27"
                         android:inputType="numberDecimal"
                         android:maxLines="1"
                         android:padding="12dp"
-                        android:background="@android:drawable/edit_text"
-                        android:layout_marginBottom="16dp" />
+                        android:textColor="@color/black" />
 
                     <!-- Fuel Usage -->
                     <TextView
@@ -141,45 +142,55 @@
                         android:id="@+id/etFuelUsage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:background="@android:drawable/edit_text"
                         android:hint="e.g. 40"
                         android:inputType="numberDecimal"
                         android:maxLines="1"
                         android:padding="12dp"
-                        android:background="@android:drawable/edit_text"
-                        android:layout_marginBottom="16dp" />
+                        android:textColor="@color/black" />
 
-                    <!-- BUDI MADANI Eligibility -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="BUDI MADANI Eligible?"
-                        android:textSize="14sp"
-                        android:textColor="#757575"
-                        android:layout_marginBottom="8dp" />
-
-                    <RadioGroup
-                        android:id="@+id/rgBudiMadani"
+                    <!-- BUDI MADANI Eligibility — hidden until RON95 selected -->
+                    <LinearLayout
+                        android:id="@+id/layoutBudiMadani"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
-                        <RadioButton
-                            android:id="@+id/rbYes"
-                            android:layout_width="0dp"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Yes"
-                            android:textSize="15sp" />
+                            android:text="BUDI MADANI Eligible?"
+                            android:textSize="14sp"
+                            android:textColor="#757575"
+                            android:layout_marginBottom="8dp" />
 
-                        <RadioButton
-                            android:id="@+id/rbNo"
-                            android:layout_width="0dp"
+                        <RadioGroup
+                            android:id="@+id/rgBudiMadani"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="No"
-                            android:textSize="15sp" />
+                            android:orientation="horizontal">
 
-                    </RadioGroup>
+                            <RadioButton
+                                android:id="@+id/rbYes"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Yes"
+                                android:textSize="15sp" />
+
+                            <RadioButton
+                                android:id="@+id/rbNo"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="No"
+                                android:textSize="15sp" />
+
+                        </RadioGroup>
+
+                    </LinearLayout>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
