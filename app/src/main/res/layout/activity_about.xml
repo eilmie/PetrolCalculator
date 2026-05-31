@@ -194,12 +194,12 @@
                         android:id="@+id/tvGithubUrl"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="https://github.com/YOUR_USERNAME/YOUR_REPO"
-                        android:textSize="13sp"
-                        android:textColor="#1565C0"
-                        android:textStyle="bold"
                         android:clickable="true"
-                        android:focusable="true" />
+                        android:focusable="true"
+                        android:text="https://github.com/eilmie/PetrolCalculator"
+                        android:textColor="#1565C0"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
