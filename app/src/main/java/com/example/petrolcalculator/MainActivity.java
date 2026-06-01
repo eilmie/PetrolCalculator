@@ -89,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
         spinnerPetrolType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (view != null) ((TextView) view).setTextColor(android.graphics.Color.BLACK);
+
                 String selected = parent.getItemAtPosition(position).toString();
                 if (selected.equals("RON95")) {
                     layoutBudiMadani.setVisibility(View.VISIBLE);
