@@ -89,15 +89,26 @@ public class MainActivity extends AppCompatActivity {
         spinnerPetrolType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
                 if (view != null) ((TextView) view).setTextColor(android.graphics.Color.BLACK);
 
                 String selected = parent.getItemAtPosition(position).toString();
-                if (selected.equals("RON95")) {
-                    layoutBudiMadani.setVisibility(View.VISIBLE);
-                } else {
-                    layoutBudiMadani.setVisibility(View.GONE);
-                    rgBudiMadani.clearCheck();
+
+                // Auto-fill price based on petrol type (weekly Malaysia price)
+                switch (selected) {
+                    case "RON95":
+                        etPricePerLiter.setText("392"); // RM3.92 in bank-style input
+                        layoutBudiMadani.setVisibility(View.VISIBLE);
+                        break;
+                    case "RON97":
+                        etPricePerLiter.setText("465"); // RM4.65
+                        layoutBudiMadani.setVisibility(View.GONE);
+                        rgBudiMadani.clearCheck();
+                        break;
+                    case "Diesel":
+                        etPricePerLiter.setText("487"); // RM4.87
+                        layoutBudiMadani.setVisibility(View.GONE);
+                        rgBudiMadani.clearCheck();
+                        break;
                 }
             }
 
@@ -179,18 +190,33 @@ public class MainActivity extends AppCompatActivity {
 
         boolean isEligible = rbYes.isChecked();
 
-        // Step 1: Total petrol cost
+        // BUDI95 monthly limit
+        final double BUDI_LIMIT = 200.0;
+
+        // Step 1: Total petrol cost (full usage x price)
         double totalCost = fuelUsage * pricePerLiter;
 
-        // Step 2 & 3: BUDI rebate (RON95 + eligible only)
-        double budiRebate  = 0;
-        double totalSaving = 0;
+        // Step 2 & 3: BUDI rebate (RON95 + eligible only, capped at 200L)
+        double budiRebate   = 0;
+        double totalSaving  = 0;
         double finalPayable;
+        double subsidisedLiters  = 0;
+        double unsubsidisedLiters = 0;
 
         if (isRON95 && isEligible) {
-            budiRebate   = fuelUsage * SUBSIDY_RATE;
-            totalSaving  = totalCost - budiRebate;
-            finalPayable = totalSaving;
+            if (fuelUsage <= BUDI_LIMIT) {
+                // All usage is within the 200L limit
+                subsidisedLiters   = fuelUsage;
+                unsubsidisedLiters = 0;
+            } else {
+                // Only first 200L gets the rebate, rest is full price
+                subsidisedLiters   = BUDI_LIMIT;
+                unsubsidisedLiters = fuelUsage - BUDI_LIMIT;
+            }
+
+            budiRebate   = subsidisedLiters * SUBSIDY_RATE;
+            totalSaving  = totalCost - (totalCost - budiRebate);
+            finalPayable = totalCost - budiRebate;
         } else {
             finalPayable = totalCost;
         }
@@ -205,12 +231,27 @@ public class MainActivity extends AppCompatActivity {
             tvTotalSaving.setVisibility(View.VISIBLE);
             tvFinalLabel.setVisibility(View.VISIBLE);
             tvFinalPayable.setVisibility(View.VISIBLE);
-            tvEligibilityNote.setVisibility(View.GONE);
+            tvEligibilityNote.setVisibility(View.VISIBLE);
 
-            // FIX 3: minus symbol on rebate so user knows it's a discount
             tvBudiRebate.setText(String.format("- RM %.2f", budiRebate));
             tvTotalSaving.setText(String.format("RM %.2f", totalSaving));
             tvFinalPayable.setText(String.format("RM %.2f", finalPayable));
+
+            // Show warning if usage exceeds 200L
+            if (fuelUsage > BUDI_LIMIT) {
+                tvEligibilityNote.setText(String.format(
+                        "⚠️ BUDI95 rebate capped at 200L/month. First 200L subsidised (RM %.2f rebate), remaining %.0fL charged at full price.",
+                        budiRebate, unsubsidisedLiters
+                ));
+                tvEligibilityNote.setTextColor(android.graphics.Color.parseColor("#E65100"));
+            } else {
+                tvEligibilityNote.setText(String.format(
+                        "✅ %.0fL subsidised under BUDI95 (%.0fL remaining this month).",
+                        subsidisedLiters, BUDI_LIMIT - subsidisedLiters
+                ));
+                tvEligibilityNote.setTextColor(android.graphics.Color.parseColor("#2E7D32"));
+            }
+
         } else {
             tvRebateLabel.setVisibility(View.GONE);
             tvBudiRebate.setVisibility(View.GONE);
@@ -224,6 +265,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 tvEligibilityNote.setText("BUDI MADANI rebate applies to RON95 only.");
             }
+            tvEligibilityNote.setTextColor(android.graphics.Color.parseColor("#757575"));
             tvEligibilityNote.setVisibility(View.VISIBLE);
         }
 
