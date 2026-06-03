@@ -129,6 +129,15 @@
                         android:padding="12dp"
                         android:textColor="@color/black" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="* Price auto-filled based on current Malaysia weekly rate."
+                        android:textSize="11sp"
+                        android:textColor="#757575"
+                        android:textStyle="italic"
+                        android:layout_marginBottom="16dp" />
+
                     <!-- Fuel Usage -->
                     <TextView
                         android:layout_width="wrap_content"
